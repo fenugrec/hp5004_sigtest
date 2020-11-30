@@ -125,7 +125,7 @@ u16 test_counter(unsigned counts, unsigned bitno) {
 }
 
 // get crc of constant bit stream
-u16 test_vector(unsigned clocks, unsigned bitval) {
+u16 calc_vector(unsigned clocks, unsigned bitval) {
 	unsigned bitcnt;
 	u16 crc = 0;
 	for (bitcnt = 0; bitcnt < clocks; bitcnt++) {
@@ -152,7 +152,7 @@ void test_algo(void) {
 	for (i=0; vectors[i].testlen; i++) {
 		uint16_t crc;
 
-		crc = test_vector(vectors[i].testlen, vectors[i].bitval);
+		crc = calc_vector(vectors[i].testlen, vectors[i].bitval);
 		
 		printf("testlen %05X, bitval %u, sig: ",
 				vectors[i].testlen, vectors[i].bitval);
@@ -224,6 +224,9 @@ void rom_printsigs(FILE *i_file) {
 	}
 
 	printf("clocks: 0x%05X\n", file_len);
+	printf("constant 1: ");
+	print_sig(calc_vector(file_len, 1));
+	printf("\n");
 	unsigned databit;
 	for (databit = 0; databit <= 7; databit++) {
 		//for every bit position : generate signature as if probing signal
