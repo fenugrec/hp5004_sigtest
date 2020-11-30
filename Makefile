@@ -10,7 +10,7 @@ TGTLIST = sigtest
 all: $(TGTLIST)
 
 
-sigtest:	sigtest.c crc.c
+sigtest:	sigtest.c
 
 clean:
 	rm -f *.o
