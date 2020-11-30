@@ -166,7 +166,6 @@ void test_algo(void) {
 			printf("\n");
 		}
 	}
-	printf("");
 }
 
 
@@ -227,6 +226,7 @@ void rom_printsigs(FILE *i_file) {
 			unsigned newbit = (src[cnt] >> databit) & 1;
 			crc = crc1281_singlebit(newbit, crc);
 		}
+		crc = revbits(crc);
 		printf("D%u : ", databit);
 		print_sig(crc);
 		printf("\n");
