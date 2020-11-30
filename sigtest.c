@@ -124,6 +124,17 @@ u16 test_counter(unsigned counts, unsigned bitno) {
 	return revbits(crc);
 }
 
+// get crc of constant bit stream
+u16 test_vector(unsigned clocks, unsigned bitval) {
+	unsigned bitcnt;
+	u16 crc = 0;
+	for (bitcnt = 0; bitcnt < clocks; bitcnt++) {
+			crc = crc1281_singlebit(bitval, crc);
+	}
+	crc = revbits(crc);
+	return crc;
+}
+
 void test_algo(void) {
 	unsigned i;
 
@@ -139,16 +150,12 @@ void test_algo(void) {
 
 	/************ test simple vectors */
 	for (i=0; vectors[i].testlen; i++) {
-		unsigned bitcnt;
 		uint16_t crc;
 
-		crc = vectors[i].initval;
-		for (bitcnt = 0; bitcnt < vectors[i].testlen; bitcnt++) {
-			crc = crc1281_singlebit(vectors[i].bitval, crc);
-		}
-		crc = revbits(crc);
-		printf("testlen %05X, init %u, bitval %u, sig: ",
-				vectors[i].testlen, vectors[i].initval, vectors[i].bitval);
+		crc = test_vector(vectors[i].testlen, vectors[i].bitval);
+		
+		printf("testlen %05X, bitval %u, sig: ",
+				vectors[i].testlen, vectors[i].bitval);
 		print_sig(crc);
 		printf("\n");
 	}
