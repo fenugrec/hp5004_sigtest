@@ -103,11 +103,31 @@ const struct testvec vectors[] = {
 //	{1U << 16, 1, 1},
 	{0, 0, 0}
 };
-	
+
+/** test vectors for counter test */
+const unsigned count_vectors[] = {
+	0x800,	//example : hp3478A. signatures match
+	0x1000,
+	0x8000,	//example: boonton 4210, signatures match
+	0x10000,
+	0};	//delimit
+
+
+//get crc for bit <bitno> of a counter from 0 to (counts - 1)
+u16 test_counter(unsigned counts, unsigned bitno) {
+	unsigned cnt;
+	u16 crc = 0;
+	for (cnt = 0; cnt < counts; cnt++) {
+		unsigned newbit = (cnt >> bitno) & 1;
+		crc = crc1281_singlebit(newbit, crc);
+	}
+	return revbits(crc);
+}
 
 void test_algo(void) {
 	unsigned i;
 
+	/************ test sig charset */
 	printf("printsig: ");
 	uint16_t dummy_sig = 0x0123;
 	
@@ -117,6 +137,7 @@ void test_algo(void) {
 	}
 	printf("\n");
 
+	/************ test simple vectors */
 	for (i=0; vectors[i].testlen; i++) {
 		unsigned bitcnt;
 		uint16_t crc;
@@ -132,6 +153,20 @@ void test_algo(void) {
 		printf("\n");
 	}
 
+	/************ test counter bits */
+	for (i=0; count_vectors[i]; i++) {
+		// for each count : repeat for every bit position
+		unsigned count = count_vectors[i];
+		unsigned curbit;
+		for (curbit = 0; (count -1) >> curbit; curbit++) {
+			u16 crc;
+			crc = test_counter(count, curbit);
+			printf("counter : %X (%u) clocks, bit %u: ", count, count, curbit);
+			print_sig(crc);
+			printf("\n");
+		}
+	}
+	printf("");
 }
 
 
