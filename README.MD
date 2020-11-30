@@ -18,6 +18,7 @@ Seems to mostly work :
 
 # usage
 `./sigtest` without arguments : runs built-in tests
+
 `./sigtest rom.bin` : generates signatures for `rom.bin`
 
 # example
@@ -48,4 +49,4 @@ U502 pin 15: 5866 (PAF5)
 U502 pin 16: 67H3 (89FH)
 U502 pin 17: 0229 (PA7C)
 ```
-in this case, the signatures for D3 (U502 pin 13) differ by one character, but all the others do. This is suspicious as one would expect this kind of CRC algorithm to produce very different values given even minor changes in the input stream. Also 'C' looks like '0' so this could very well be a copy error.
+in this case, the signatures for D3 (U502 pin 13) differ by one character, but all the others match perfectly. This is suspicious as one would expect this kind of CRC algorithm to produce very different values given even minor changes in the input stream. Also 'C' looks like '0' so this could very well be a copy error.
